@@ -1,0 +1,1164 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Vivelle Ice Cream | Order Now</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+  <style>
+
+    *{
+      margin:0;
+      padding:0;
+      box-sizing:border-box;
+      font-family:'Poppins', sans-serif;
+      scrollbar-width:none;
+      -ms-overflow-style:none;
+    }
+
+    *::-webkit-scrollbar{
+      display:none;
+      width:0;
+      height:0;
+      background:transparent;
+    }
+
+    body{
+      background:#fff6fb;
+      color:#333;
+    }
+
+    /* ================= NAVBAR ================= */
+
+    .navbar{
+      width:100%;
+      height:85px;
+      background:white;
+
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+
+      padding:0 50px;
+
+      box-shadow:0 4px 20px rgba(0,0,0,0.06);
+
+      position:sticky;
+      top:0;
+      z-index:1000;
+    }
+
+    .logo{
+      display:flex;
+      align-items:center;
+      gap:15px;
+    }
+
+    .logo img{
+      width:75px;
+      height:75px;
+      border-radius:50%;
+      object-fit:cover;
+    }
+
+    .logo h2{
+      color:#ff1493;
+      font-size:32px;
+    }
+
+    .nav-right{
+      display:flex;
+      align-items:center;
+      gap:20px;
+    }
+
+    .location-box{
+      background:#ffe4f2;
+      padding:10px 18px;
+      border-radius:30px;
+      color:#ff1493;
+      font-size:14px;
+      font-weight:500;
+      cursor:pointer;
+    }
+
+    .profile-btn{
+      width:45px;
+      height:45px;
+
+      border:none;
+      border-radius:50%;
+
+      background:#ff1493;
+      color:white;
+
+      cursor:pointer;
+      font-size:18px;
+      font-weight:bold;
+    }
+
+    /* ================= HERO ================= */
+
+    .hero{
+      padding:40px 60px;
+      overflow:hidden;
+    }
+
+    .hero-banner{
+      width:100%;
+      height:320px;
+      border-radius:30px;
+      overflow:hidden;
+      position:relative;
+
+      box-shadow:0 10px 30px rgba(0,0,0,0.1);
+    }
+
+    .hero-banner img{
+      width:100%;
+      height:100%;
+      object-fit:cover;
+    }
+
+    .overlay{
+      position:absolute;
+      top:0;
+      left:0;
+
+      width:100%;
+      height:100%;
+
+      background:rgba(0,0,0,0.4);
+
+      display:flex;
+      flex-direction:column;
+      justify-content:center;
+
+      padding-left:70px;
+
+      color:white;
+    }
+
+    .overlay h1{
+      font-size:60px;
+      margin-bottom:15px;
+    }
+
+    .overlay p{
+      font-size:20px;
+    }
+
+    /* ================= SEARCH ================= */
+
+    .search-section{
+      margin-top:-35px;
+      padding:0 60px;
+      position:relative;
+      z-index:100;
+    }
+
+    .search-box{
+      width:100%;
+      background:white;
+      border-radius:25px;
+
+      padding:18px 25px;
+
+      display:flex;
+      align-items:center;
+      gap:20px;
+
+      box-shadow:0 8px 25px rgba(0,0,0,0.08);
+    }
+
+    .search-box input{
+      flex:1;
+      border:none;
+      outline:none;
+      font-size:18px;
+    }
+
+    .icon-btn{
+      width:45px;
+      height:45px;
+
+      border:none;
+      border-radius:50%;
+
+      background:#ff1493;
+      color:white;
+
+      font-size:18px;
+
+      cursor:pointer;
+
+      transition:0.3s;
+    }
+
+    .icon-btn:hover{
+      background:#ff69b4;
+      transform:scale(1.08);
+    }
+
+    /* ================= PRODUCTS ================= */
+
+    .products{
+      padding:60px;
+    }
+
+    .products h2{
+      color:#ff1493;
+      font-size:38px;
+      margin-bottom:35px;
+    }
+
+    .product-grid{
+      display:grid;
+      grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
+      gap:30px;
+    }
+
+    .product-card{
+      background:white;
+      border-radius:25px;
+      overflow:hidden;
+
+      box-shadow:0 6px 18px rgba(0,0,0,0.08);
+
+      transition:0.3s;
+
+      display:flex;
+      flex-direction:column;
+      height:100%;
+    }
+
+    .product-card:hover{
+      transform:translateY(-10px);
+    }
+
+    .product-card img{
+      width:100%;
+      height:230px;
+      object-fit:cover;
+    }
+
+    .product-content{
+      padding:20px;
+
+      display:flex;
+      flex-direction:column;
+
+      flex:1;
+    }
+
+    .top-row{
+      display:flex;
+      justify-content:space-between;
+      align-items:flex-start;
+
+      gap:10px;
+
+      margin-bottom:12px;
+
+      min-height:70px;
+    }
+
+    .top-row h3{
+      font-size:22px;
+      line-height:1.4;
+
+      flex:1;
+
+      color:#ff1493;
+    }
+
+    .rating{
+      background:#00b14f;
+      color:white;
+
+      padding:6px 12px;
+
+      border-radius:20px;
+
+      font-size:14px;
+      font-weight:600;
+
+      white-space:nowrap;
+    }
+
+    .description{
+      color:#777;
+
+      line-height:1.7;
+
+      font-size:15px;
+
+      min-height:75px;
+
+      margin-bottom:20px;
+    }
+
+    .bottom-row{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+
+      margin-top:auto;
+    }
+
+    .price{
+      font-size:24px;
+      font-weight:700;
+    }
+
+    .add-btn{
+      padding:12px 20px;
+
+      border:none;
+      border-radius:30px;
+
+      background:#ff1493;
+      color:white;
+
+      font-weight:600;
+
+      cursor:pointer;
+
+      transition:0.3s;
+    }
+
+    .add-btn:hover{
+      background:#ff69b4;
+      transform:scale(1.05);
+    }
+
+    /* ================= CART BUTTON ================= */
+
+    .cart-btn{
+      position:fixed;
+      bottom:30px;
+      right:30px;
+
+      width:70px;
+      height:70px;
+
+      border:none;
+      border-radius:50%;
+
+      background:#ff1493;
+      color:white;
+
+      font-size:28px;
+
+      cursor:pointer;
+
+      box-shadow:0 8px 25px rgba(255,20,147,0.4);
+
+      z-index:999;
+    }
+
+    /* ================= CART SIDEBAR ================= */
+
+    .cart-sidebar{
+      position:fixed;
+      top:0;
+      right:-420px;
+
+      width:400px;
+      height:100vh;
+
+      background:white;
+
+      box-shadow:-5px 0 20px rgba(0,0,0,0.1);
+
+      z-index:5000;
+
+      transition:0.4s;
+
+      padding:25px;
+
+      overflow-y:auto;
+    }
+
+    .cart-sidebar.active{
+      right:0;
+    }
+
+    .cart-header{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+
+      margin-bottom:30px;
+    }
+
+    .cart-header h2{
+      color:#ff1493;
+    }
+
+    .cart-header button{
+      width:40px;
+      height:40px;
+
+      border:none;
+      border-radius:50%;
+
+      background:#ff1493;
+      color:white;
+
+      cursor:pointer;
+    }
+
+    .cart-item{
+      background:#fff6fb;
+
+      padding:15px;
+      border-radius:18px;
+
+      margin-bottom:15px;
+    }
+
+    .cart-item h4{
+      margin-bottom:8px;
+      color:#ff1493;
+    }
+
+    .cart-item button{
+      margin-top:10px;
+
+      padding:8px 14px;
+
+      border:none;
+      border-radius:20px;
+
+      background:#ff4d6d;
+      color:white;
+
+      cursor:pointer;
+    }
+
+    .cart-footer{
+      margin-top:30px;
+    }
+
+    .place-order-btn{
+      width:100%;
+
+      padding:16px;
+
+      border:none;
+      border-radius:30px;
+
+      background:#ff1493;
+      color:white;
+
+      font-size:18px;
+
+      cursor:pointer;
+
+      margin-top:15px;
+    }
+
+    /* ================= LOGIN POPUP ================= */
+
+    .login-popup{
+      position:fixed;
+      top:0;
+      left:0;
+
+      width:100%;
+      height:100vh;
+
+      background:rgba(0,0,0,0.45);
+
+      display:none;
+      justify-content:center;
+      align-items:center;
+
+      z-index:6000;
+    }
+
+    .login-box{
+      width:350px;
+
+      background:white;
+
+      padding:35px;
+
+      border-radius:25px;
+
+      position:relative;
+
+      text-align:center;
+    }
+
+    .login-box h2{
+      color:#ff1493;
+      margin-bottom:25px;
+    }
+
+    .login-box input{
+      width:100%;
+      padding:15px;
+
+      border-radius:15px;
+
+      border:1px solid #ddd;
+
+      margin-bottom:20px;
+
+      font-size:16px;
+    }
+
+    .login-submit{
+      width:100%;
+      padding:15px;
+
+      border:none;
+      border-radius:30px;
+
+      background:#ff1493;
+      color:white;
+
+      font-size:16px;
+
+      cursor:pointer;
+    }
+
+    .close-login{
+      position:absolute;
+      top:15px;
+      right:15px;
+
+      width:35px;
+      height:35px;
+
+      border:none;
+      border-radius:50%;
+
+      background:#ff1493;
+      color:white;
+
+      cursor:pointer;
+    }
+
+    @media(max-width:768px){
+
+      .navbar,
+      .hero,
+      .search-section,
+      .products{
+        padding-left:20px;
+        padding-right:20px;
+      }
+
+      .overlay{
+        padding-left:30px;
+      }
+
+      .overlay h1{
+        font-size:40px;
+      }
+
+      .search-box{
+        flex-wrap:wrap;
+      }
+
+      .cart-sidebar{
+        width:100%;
+      }
+
+    }
+
+  </style>
+
+</head>
+
+<body>
+
+  <!-- ================= NAVBAR ================= -->
+
+  <nav class="navbar">
+
+    <div class="logo">
+
+      <img src="./src/assets/logo.png">
+
+      <h2>Vivelle</h2>
+
+    </div>
+
+    <div class="nav-right">
+
+      <div class="location-box"
+      onclick="changeAddress()"
+      id="addressBox">
+
+        📍 Add Delivery Address
+
+      </div>
+
+      <button class="profile-btn"
+      onclick="openLogin()"
+      id="profileBtn">
+
+        👤
+
+      </button>
+
+    </div>
+
+  </nav>
+
+  <!-- ================= HERO ================= -->
+
+  <section class="hero">
+
+    <div class="hero-banner">
+
+      <img src="./src/assets/pB.jpg">
+
+      <div class="overlay">
+
+        <h1>Order Your Favorite Scoops 🍦</h1>
+
+        <p>
+          Creamy, dreamy and delivered straight to your doorstep.
+        </p>
+
+      </div>
+
+    </div>
+
+  </section>
+
+  <!-- ================= SEARCH ================= -->
+
+  <section class="search-section">
+
+    <div class="search-box">
+
+      🔍
+
+      <input type="text"
+      placeholder="Search for ice creams, desserts, chocolates...">
+
+      <button class="icon-btn"
+      onclick="startVoiceSearch()">
+
+        🎤
+
+      </button>
+
+    </div>
+
+  </section>
+
+  <!-- ================= PRODUCTS ================= -->
+
+  <section class="products">
+
+    <h2>Recommended For You</h2>
+
+    <div class="product-grid">
+
+      <!-- PRODUCT -->
+
+      <div class="product-card">
+
+        <img src="./src/assets/p5.jpg">
+
+        <div class="product-content">
+
+          <div class="top-row">
+
+            <h3>Midnight Cocoa 🍫</h3>
+
+            <span class="rating">4.9 ★</span>
+
+          </div>
+
+          <p class="description">
+            Rich dark chocolate flavor with creamy luxurious texture.
+          </p>
+
+          <div class="bottom-row">
+
+            <h4 class="price">₹225</h4>
+
+            <button class="add-btn"
+            onclick="addToCart('Midnight Cocoa',225)">
+
+              Add +
+
+            </button>
+
+          </div>
+
+        </div>
+
+      </div>
+
+      <!-- PRODUCT -->
+
+      <div class="product-card">
+
+        <img src="./src/assets/p12.jpg">
+
+        <div class="product-content">
+
+          <div class="top-row">
+
+            <h3>Pink Velvet Berry 🍓</h3>
+
+            <span class="rating">4.8 ★</span>
+
+          </div>
+
+          <p class="description">
+            Creamy pink velvet ice cream with dreamy berry sweetness.
+          </p>
+
+          <div class="bottom-row">
+
+            <h4 class="price">₹199</h4>
+
+            <button class="add-btn"
+            onclick="addToCart('Pink Velvet Berry',199)">
+
+              Add +
+
+            </button>
+
+          </div>
+
+        </div>
+
+      </div>
+
+      <!-- PRODUCT -->
+
+      <div class="product-card">
+
+        <img src="./src/assets/p6.jpg">
+
+        <div class="product-content">
+
+          <div class="top-row">
+
+            <h3>Oreo Avalanche 🍪</h3>
+
+            <span class="rating">4.9 ★</span>
+
+          </div>
+
+          <p class="description">
+            Loaded with crunchy Oreos and creamy vanilla goodness.
+          </p>
+
+          <div class="bottom-row">
+
+            <h4 class="price">₹199</h4>
+
+            <button class="add-btn"
+            onclick="addToCart('Oreo Avalanche',199)">
+
+              Add +
+
+            </button>
+
+          </div>
+
+        </div>
+
+      </div>
+
+      <!-- PRODUCT -->
+
+      <div class="product-card">
+
+        <img src="./src/assets/p13.jpg">
+
+        <div class="product-content">
+
+          <div class="top-row">
+
+            <h3>Snowy Vanilla ✨</h3>
+
+            <span class="rating">4.6 ★</span>
+
+          </div>
+
+          <p class="description">
+            Soft vanilla flavor with dreamy snowy sweetness.
+          </p>
+
+          <div class="bottom-row">
+
+            <h4 class="price">₹165</h4>
+
+            <button class="add-btn"
+            onclick="addToCart('Snowy Vanilla',165)">
+
+              Add +
+
+            </button>
+
+          </div>
+
+        </div>
+
+      </div>
+
+      <!-- PRODUCT -->
+
+      <div class="product-card">
+
+        <img src="./src/assets/p3.jpg">
+
+        <div class="product-content">
+
+          <div class="top-row">
+
+            <h3>Butterscotch Bliss 🍯</h3>
+
+            <span class="rating">4.8 ★</span>
+
+          </div>
+
+          <p class="description">
+            Crunchy caramelized butterscotch in every creamy scoop.
+          </p>
+
+          <div class="bottom-row">
+
+            <h4 class="price">₹180</h4>
+
+            <button class="add-btn"
+            onclick="addToCart('Butterscotch Bliss',180)">
+
+              Add +
+
+            </button>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </section>
+
+  <!-- ================= CART BUTTON ================= -->
+
+  <button class="cart-btn"
+  onclick="openCart()">
+
+    🛒
+
+  </button>
+
+  <!-- ================= CART SIDEBAR ================= -->
+
+  <div class="cart-sidebar"
+  id="cartSidebar">
+
+    <div class="cart-header">
+
+      <h2>Your Cart 🍦</h2>
+
+      <button onclick="closeCart()">
+        ✕
+      </button>
+
+    </div>
+
+    <div id="cartItems"></div>
+
+    <div class="cart-footer">
+
+      <h3 id="totalPrice">
+        Total: ₹0
+      </h3>
+
+      <button class="place-order-btn"
+      onclick="placeOrder()">
+
+        Place Order
+
+      </button>
+
+    </div>
+
+  </div>
+
+  <!-- ================= LOGIN POPUP ================= -->
+
+  <div class="login-popup"
+  id="loginPopup">
+
+    <div class="login-box">
+
+      <button class="close-login"
+      onclick="closeLogin()">
+
+        ✕
+
+      </button>
+
+      <h2>Welcome to Vivelle 🍦</h2>
+
+      <input
+      type="text"
+      id="usernameInput"
+      placeholder="Enter your name">
+
+      <button class="login-submit"
+      onclick="loginUser()">
+
+        Login
+
+      </button>
+
+    </div>
+
+  </div>
+
+  <!-- ================= SCRIPT ================= -->
+
+  <script>
+
+    let cart = [];
+
+    function addToCart(name, price){
+
+      cart.push({name, price});
+
+      updateCart();
+
+    }
+
+    function updateCart(){
+
+      const cartItems =
+      document.getElementById("cartItems");
+
+      const totalPrice =
+      document.getElementById("totalPrice");
+
+      cartItems.innerHTML = "";
+
+      let total = 0;
+
+      cart.forEach((item, index)=>{
+
+        total += item.price;
+
+        cartItems.innerHTML += `
+
+          <div class="cart-item">
+
+            <h4>${item.name}</h4>
+
+            <p>₹${item.price}</p>
+
+            <button onclick="removeItem(${index})">
+
+              Cancel
+
+            </button>
+
+          </div>
+
+        `;
+
+      });
+
+      totalPrice.innerHTML =
+      `Total: ₹${total}`;
+
+    }
+
+    function removeItem(index){
+
+      cart.splice(index,1);
+
+      updateCart();
+
+    }
+
+    function openCart(){
+
+      document
+      .getElementById("cartSidebar")
+      .classList.add("active");
+
+    }
+
+    function closeCart(){
+
+      document
+      .getElementById("cartSidebar")
+      .classList.remove("active");
+
+    }
+
+    function placeOrder(){
+
+      if(cart.length === 0){
+
+        alert("Your cart is empty 🍦");
+
+        return;
+
+      }
+
+      alert("Order placed successfully 🎉");
+
+      cart = [];
+
+      updateCart();
+
+      closeCart();
+
+    }
+
+    /* ================= VOICE SEARCH ================= */
+
+    function startVoiceSearch(){
+
+      const recognition =
+      new webkitSpeechRecognition();
+
+      recognition.lang = "en-US";
+
+      recognition.start();
+
+      recognition.onresult = function(event){
+
+        const transcript =
+        event.results[0][0].transcript;
+
+        document.querySelector("input").value =
+        transcript;
+
+      };
+
+    }
+
+    /* ================= LOGIN SYSTEM ================= */
+
+    function openLogin(){
+
+      document
+      .getElementById("loginPopup")
+      .style.display = "flex";
+
+    }
+
+    function closeLogin(){
+
+      document
+      .getElementById("loginPopup")
+      .style.display = "none";
+
+    }
+
+    function loginUser(){
+
+      const username =
+      document.getElementById("usernameInput").value;
+
+      if(username === ""){
+
+        alert("Please enter your name 🍦");
+
+        return;
+
+      }
+
+      localStorage.setItem("vivelleUser", username);
+
+      document
+      .getElementById("profileBtn")
+      .innerHTML =
+      username.charAt(0).toUpperCase();
+
+      closeLogin();
+
+    }
+
+    function loadUser(){
+
+      const savedUser =
+      localStorage.getItem("vivelleUser");
+
+      if(savedUser){
+
+        document
+        .getElementById("profileBtn")
+        .innerHTML =
+        savedUser.charAt(0).toUpperCase();
+
+      }
+
+    }
+
+    loadUser();
+
+    /* ================= ADDRESS ================= */
+
+    function changeAddress(){
+
+      const address =
+      prompt("Enter Delivery Address 📍");
+
+      if(address){
+
+        localStorage.setItem(
+          "vivelleAddress",
+          address
+        );
+
+        document
+        .getElementById("addressBox")
+        .innerHTML =
+        "📍 " + address;
+
+      }
+
+    }
+
+    function loadAddress(){
+
+      const savedAddress =
+      localStorage.getItem("vivelleAddress");
+
+      if(savedAddress){
+
+        document
+        .getElementById("addressBox")
+        .innerHTML =
+        "📍 " + savedAddress;
+
+      }
+
+    }
+
+    loadAddress();
+
+  </script>
+
+</body>
+
+</html>

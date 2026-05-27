@@ -1,0 +1,168 @@
+@import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Nunito:wght@400;500;600;700&display=swap');
+
+:root {
+  --pink: #ff6b9d;
+  --pink-dark: #e84d82;
+  --purple: #8f4cff;
+  --cream: #fff8f0;
+  --cream-dark: #ffe8d6;
+  --chocolate: #5c3d2e;
+  --mint: #7ec8a3;
+  --text: #4a3728;
+  --text-light: #7a6558;
+  --white: #ffffff;
+  --shadow: 0 12px 40px rgba(92, 61, 46, 0.12);
+  --radius: 16px;
+  --font-display: 'Fredoka', system-ui, sans-serif;
+  --font-body: 'Nunito', system-ui, sans-serif;
+  --flow-x: 50vw;
+  --flow-y: 50vh;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+*::-webkit-scrollbar {
+  width: 0;
+  height: 0;
+  background: transparent;
+}
+
+html,
+body {
+  scroll-behavior: smooth;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+html::-webkit-scrollbar,
+body::-webkit-scrollbar {
+  display: none;
+  width: 0;
+  height: 0;
+}
+
+body {
+  margin: 0;
+  font-family: var(--font-body);
+  font-size: 1rem;
+  line-height: 1.6;
+  color: var(--text);
+  background:
+    radial-gradient(circle at var(--flow-x) var(--flow-y), rgba(255, 107, 157, 0.2), transparent 28rem),
+    var(--cream);
+  -webkit-font-smoothing: antialiased;
+}
+
+#root {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  isolation: isolate;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+#root::-webkit-scrollbar,
+.main::-webkit-scrollbar {
+  display: none;
+  width: 0;
+  height: 0;
+}
+
+.cursor-flow-bg {
+  position: fixed;
+  inset: -18%;
+  z-index: -1;
+  pointer-events: none;
+  overflow: hidden;
+  background:
+    radial-gradient(circle at var(--flow-x) var(--flow-y), rgba(255, 107, 157, 0.55), transparent 17rem),
+    radial-gradient(circle at calc(var(--flow-x) - 12rem) calc(var(--flow-y) + 8rem), rgba(232, 77, 130, 0.36), transparent 20rem),
+    radial-gradient(circle at calc(var(--flow-x) + 11rem) calc(var(--flow-y) - 7rem), rgba(143, 76, 255, 0.34), transparent 19rem),
+    linear-gradient(135deg, rgba(255, 248, 240, 0.92), rgba(255, 232, 246, 0.88));
+  filter: blur(28px) saturate(1.25);
+  transform: translate3d(0, 0, 0);
+}
+
+.cursor-flow-bg::before,
+.cursor-flow-bg::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse at calc(var(--flow-x) + 4rem) calc(var(--flow-y) + 2rem), rgba(255, 150, 190, 0.36), transparent 18rem),
+    radial-gradient(ellipse at calc(var(--flow-x) - 8rem) calc(var(--flow-y) - 5rem), rgba(120, 54, 214, 0.26), transparent 22rem);
+  mix-blend-mode: multiply;
+  animation: cursorFlowDrift 8s ease-in-out infinite alternate;
+}
+
+.cursor-flow-bg::after {
+  opacity: 0.58;
+  filter: blur(18px);
+  animation-duration: 11s;
+  animation-direction: alternate-reverse;
+}
+
+.header,
+.main,
+.footer {
+  position: relative;
+  z-index: 1;
+}
+
+@keyframes cursorFlowDrift {
+  from {
+    transform: translate3d(-1.5rem, 0.8rem, 0) rotate(0deg) scale(1);
+  }
+
+  to {
+    transform: translate3d(1.4rem, -1rem, 0) rotate(3deg) scale(1.05);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cursor-flow-bg::before,
+  .cursor-flow-bg::after {
+    animation: none;
+  }
+}
+
+h1,
+h2,
+h3 {
+  font-family: var(--font-display);
+  color: var(--chocolate);
+  line-height: 1.2;
+}
+
+a {
+  color: var(--pink-dark);
+  text-decoration: none;
+  transition: color 0.2s;
+}
+
+a:hover {
+  color: var(--pink);
+}
+
+img {
+  max-width: 100%;
+  display: block;
+}
+
+button {
+  font-family: inherit;
+  cursor: pointer;
+}
+
+ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}

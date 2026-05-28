@@ -1,5 +1,6 @@
 import Cart from '../models/Cart.js'
 import Product from '../models/Product.js'
+import { syncCart } from '../services/firestore.js'
 
 export async function getCart(req, res) {
   const cart = await Cart.findOne({ user: req.account._id }).populate('items.product')
@@ -22,5 +23,6 @@ export async function saveCart(req, res) {
     { items },
     { new: true, upsert: true, setDefaultsOnInsert: true },
   ).populate('items.product')
+  await syncCart(cart)
   res.json({ items: cart.items })
 }

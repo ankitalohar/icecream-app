@@ -1,10 +1,12 @@
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import AuthContext from './auth-context'
 import { api, clearSession, getStoredUser, getToken, storeSession } from '../services/api'
+import { endFirebaseSession, startFirebaseSession } from '../services/firebaseAuth'
 
 export default function AuthProvider({ children }) {
   const [user, setUser] = useState(() => (getToken() ? getStoredUser() : null))
   const [loading, setLoading] = useState(() => Boolean(getToken()))
+  const authInFlight = useRef(null)
 
   useEffect(() => {
     if (!getToken()) {
@@ -34,19 +36,32 @@ export default function AuthProvider({ children }) {
     }
   }, [])
 
-  async function requestOtp(form) {
-    return api('/auth/otp/request', {
-      method: 'POST',
-      body: JSON.stringify(form),
-    })
+  async function authenticate(path, form) {
+    if (authInFlight.current) throw new Error('Authentication is already in progress.')
+
+    const request = (async () => {
+      const data = await api(path, {
+        method: 'POST',
+        body: JSON.stringify(form),
+      })
+      await startFirebaseSession(data.firebaseToken).catch(() => {
+        // The API JWT remains authoritative if the optional Firebase session is unavailable.
+      })
+      storeSession(data.token, data.user)
+      setUser(data.user)
+      return data.user
+    })()
+    authInFlight.current = request
+
+    try {
+      return await request
+    } finally {
+      if (authInFlight.current === request) authInFlight.current = null
+    }
   }
 
-  async function verifyOtp(form) {
-    const data = await api('/auth/otp/verify', { method: 'POST', body: JSON.stringify(form) })
-    storeSession(data.token, data.user)
-    setUser(data.user)
-    return data.user
-  }
+  const login = (form) => authenticate('/auth/login', form)
+  const signup = (form) => authenticate('/auth/signup', form)
 
   async function logout() {
     try {
@@ -54,6 +69,9 @@ export default function AuthProvider({ children }) {
     } catch {
       // Clearing a local JWT is sufficient if it is already expired.
     } finally {
+      await endFirebaseSession().catch(() => {
+        // Always clear the API session even if Firebase is temporarily unreachable.
+      })
       clearSession()
       setUser(null)
     }
@@ -74,7 +92,7 @@ export default function AuthProvider({ children }) {
   }, [])
 
   return (
-    <AuthContext.Provider value={{ user, loading, requestOtp, verifyOtp, logout, updateProfile, toggleWishlist }}>
+    <AuthContext.Provider value={{ user, loading, login, signup, logout, updateProfile, toggleWishlist }}>
       {children}
     </AuthContext.Provider>
   )

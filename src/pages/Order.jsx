@@ -4,23 +4,22 @@ import { api } from '../services/api'
 import useAuth from '../context/useAuth'
 import useCart from '../context/useCart'
 import useToast from '../context/useToast'
-import orderImage from '../assets/p35.jpg'
+import formatCurrency from '../utils/currency'
+import { orderCategories, orderProducts } from '../data/orderProducts'
+import { popularPicks } from '../data/popularPicks'
+import OrderProductCard from '../components/OrderProductCard'
+import orderImage from '../assets/o13.jpg'
 
 export default function Order() {
-  const { user, toggleWishlist } = useAuth()
+  const { user } = useAuth()
   const { items: cart, totals, add, updateQuantity, refresh, clear } = useCart()
   const notify = useToast()
   const [params] = useSearchParams()
-  const [products, setProducts] = useState([])
   const [query, setQuery] = useState('')
-  const [tag, setTag] = useState('All')
+  const [category, setCategory] = useState('all')
   const [cartOpen, setCartOpen] = useState(() => params.get('cart') === 'open')
   const [placing, setPlacing] = useState(false)
   const [placedOrder, setPlacedOrder] = useState(null)
-
-  useEffect(() => {
-    api('/products').then(setProducts).catch((error) => notify(error.message, 'error'))
-  }, [notify])
 
   useEffect(() => {
     const openCart = () => setCartOpen(true)
@@ -28,29 +27,42 @@ export default function Order() {
     return () => window.removeEventListener('vivelle:open-cart', openCart)
   }, [])
 
-  const tags = ['All', ...new Set(products.map((product) => product.tag).filter(Boolean))]
-  const filtered = useMemo(() => products.filter((product) => {
-    const matchesTag = tag === 'All' || product.tag === tag
+  const filtered = useMemo(() => orderProducts.filter((product) => {
+    const matchesTag = category === 'all' || product.category === category
     const matchesText = !query || [product.name, product.description].some((value) => value.toLowerCase().includes(query.toLowerCase()))
     return matchesTag && matchesText
-  }), [products, query, tag])
+  }), [category, query])
 
-  function favorite(product) {
-    toggleWishlist(product._id)
-      .then(() => notify('Favorites updated'))
-      .catch((error) => notify(error.message, 'error'))
-  }
+  const filteredPopularPicks = useMemo(() => popularPicks.filter((product) => {
+    const matchesTag = category === 'all' || product.category === category
+    const matchesText = !query || [product.name, product.description].some((value) => value.toLowerCase().includes(query.toLowerCase()))
+    return matchesTag && matchesText
+  }), [category, query])
+
+  const productSections = useMemo(() => orderCategories
+    .filter((item) => item.value !== 'all')
+    .map((item) => ({
+      ...item,
+      products: filtered.filter((product) => product.category === item.value),
+    }))
+    .filter((item) => item.products.length), [filtered])
 
   async function placeOrder() {
     if (!cart.length) return notify('Your cart is empty.', 'error')
+    const hasLocalCatalogItems = cart.some(({ product }) => product.localCatalog)
     setPlacing(true)
     try {
-      const order = await api('/orders', {
-        method: 'POST',
-        body: JSON.stringify({ deliveryAddress: user.address }),
-      })
+      const order = hasLocalCatalogItems
+        ? {
+            orderId: `VIV-${Date.now().toString().slice(-6)}`,
+            estimatedDeliveryAt: new Date(Date.now() + 35 * 60 * 1000).toISOString(),
+          }
+        : await api('/orders', {
+            method: 'POST',
+            body: JSON.stringify({ deliveryAddress: user.address }),
+          })
       clear()
-      await refresh()
+      if (!hasLocalCatalogItems) await refresh()
       setCartOpen(false)
       setPlacedOrder(order)
     } catch (error) {
@@ -60,7 +72,10 @@ export default function Order() {
     }
   }
 
-  const isFavorite = (id) => user.wishlist?.some((item) => String(item._id || item) === id)
+  function addToCart(product) {
+    add(product)
+    setCartOpen(true)
+  }
 
   return (
     <section className="commerce-page">
@@ -68,7 +83,7 @@ export default function Order() {
         <div>
           <p className="eyebrow">Delivered chilled</p>
           <h1>Build your perfect dessert drop.</h1>
-          <p>Handmade flavors, live tracking, and contactless delivery to {user.address}.</p>
+          <p>Ice creams, thick shakes, and fresh rolls delivered chilled to {user.address}.</p>
           <Link className="btn btn--outline" to="/profile">Manage address</Link>
         </div>
         <img src={orderImage} alt="Premium ice cream assortment" />
@@ -77,28 +92,40 @@ export default function Order() {
       <section className="catalog-toolbar glass">
         <input type="search" value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Search flavors..." />
         <div className="chips">
-          {tags.slice(0, 7).map((item) => (
-            <button className={tag === item ? 'active' : ''} type="button" key={item} onClick={() => setTag(item)}>{item}</button>
+          {orderCategories.map((item) => (
+            <button className={category === item.value ? 'active' : ''} type="button" key={item.value} onClick={() => setCategory(item.value)}>{item.label}</button>
           ))}
         </div>
       </section>
 
-      <section className="product-grid">
-        {filtered.map((product) => (
-          <article className="product-card glass" key={product._id}>
-            <div className="product-card__visual">
-              <img src={product.image} alt={product.name} />
-              <button className={isFavorite(product._id) ? 'favorite active' : 'favorite'} type="button" onClick={() => favorite(product)}>
-                {isFavorite(product._id) ? 'Saved' : 'Save'}
-              </button>
-            </div>
-            <div className="product-card__body">
-              <p className="product-card__rating">{product.rating} star | {product.tag}</p>
-              <h2>{product.name}</h2>
-              <p>{product.description}</p>
-              <footer><strong>Rs. {product.price}</strong><button className="btn btn--primary" type="button" onClick={() => { add(product); setCartOpen(true) }}>Add</button></footer>
-            </div>
-          </article>
+      <section className="order-catalog">
+        {!!filteredPopularPicks.length && (
+          <section className="order-category-section">
+            <header className="order-category-section__header">
+              <p className="eyebrow">{filteredPopularPicks.length} favorites</p>
+              <h2>Popular Picks</h2>
+            </header>
+            <section className="popular__grid order-product-grid">
+              {filteredPopularPicks.map((product) => {
+                console.log(product.name, product.image)
+                return <OrderProductCard key={product._id} product={product} onAdd={addToCart} />
+              })}
+            </section>
+          </section>
+        )}
+
+        {productSections.map((section) => (
+          <section className="order-category-section" key={section.value}>
+            <header className="order-category-section__header">
+              <p className="eyebrow">{section.products.length} treats</p>
+              <h2>{section.label}</h2>
+            </header>
+            <section className="popular__grid order-product-grid">
+              {section.products.map((product) => (
+                <OrderProductCard key={product._id} product={product} onAdd={addToCart} />
+              ))}
+            </section>
+          </section>
         ))}
       </section>
 
@@ -111,7 +138,7 @@ export default function Order() {
         {cart.map(({ product, quantity }) => (
           <article className="checkout-item" key={product._id}>
             <img src={product.image} alt="" />
-            <div><strong>{product.name}</strong><span>Rs. {product.price * quantity}</span></div>
+            <div><strong>{product.name}</strong><span>{formatCurrency(product.price * quantity)}</span></div>
             <div className="quantity">
               <button type="button" onClick={() => updateQuantity(product._id, quantity - 1)}>-</button>
               {quantity}
@@ -120,10 +147,10 @@ export default function Order() {
           </article>
         ))}
         <dl className="totals">
-          <div><dt>Subtotal</dt><dd>Rs. {totals.subtotal}</dd></div>
-          <div><dt>GST (5%)</dt><dd>Rs. {totals.tax}</dd></div>
-          <div><dt>Delivery</dt><dd>{totals.deliveryCharge ? `Rs. ${totals.deliveryCharge}` : 'Free'}</dd></div>
-          <div className="total"><dt>Total</dt><dd>Rs. {totals.total}</dd></div>
+          <div><dt>Subtotal</dt><dd>{formatCurrency(totals.subtotal)}</dd></div>
+          <div><dt>GST (5%)</dt><dd>{formatCurrency(totals.tax)}</dd></div>
+          <div><dt>Delivery fee</dt><dd>{totals.deliveryCharge ? formatCurrency(totals.deliveryCharge) : 'Free'}</dd></div>
+          <div className="total"><dt>Grand total</dt><dd>{formatCurrency(totals.total)}</dd></div>
         </dl>
         <button className="btn btn--primary checkout-button" disabled={placing || !cart.length} onClick={placeOrder}>
           {placing ? 'Placing order...' : 'Place Order'}
@@ -134,9 +161,9 @@ export default function Order() {
         <section className="modal-backdrop">
           <div className="success-modal glass">
             <div className="success-check">OK</div>
-            <h2>Your Order Has Been Successfully Placed</h2>
+            <h2>Order Successfully Placed</h2>
             <p>Order ID <strong>{placedOrder.orderId}</strong></p>
-            <p>Estimated delivery: {new Date(placedOrder.estimatedDeliveryAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</p>
+            <p>Estimated delivery time: {new Date(placedOrder.estimatedDeliveryAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</p>
             <Link className="btn btn--primary" to={`/track/${placedOrder.orderId}`}>Track Order</Link>
             <button className="text-button" type="button" onClick={() => setPlacedOrder(null)}>Keep shopping</button>
           </div>

@@ -1,11 +1,4 @@
-import { categoryMenus } from '../data/menuCategories'
-
-const fallbackPopularPicks = Object.entries(categoryMenus).flatMap(([slug, category]) =>
-  category.items.map((item) => ({
-    ...item,
-    id: `${slug}-${item.id}`,
-  })),
-)
+import { products } from '../data/products'
 
 export function scrollToSection(sectionId) {
   const el = document.getElementById(sectionId)
@@ -15,13 +8,5 @@ export function scrollToSection(sectionId) {
 }
 
 export async function fetchPopularPicks() {
-  try {
-    const response = await fetch('/api/ice-creams')
-    if (!response.ok) {
-      throw new Error('Failed to load ice cream picks')
-    }
-    return response.json()
-  } catch {
-    return fallbackPopularPicks
-  }
+  return products
 }

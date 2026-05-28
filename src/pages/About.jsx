@@ -1,6 +1,6 @@
-import studioImage from '../assets/pB.jpg'
-import scoopImage from '../assets/p16.jpg'
-import counterImage from '../assets/p25.jpg'
+import studioImage from '../assets/o15.jpg'
+import scoopImage from '../assets/o16.jpg'
+import counterImage from '../assets/o17.jpg'
 
 export default function About() {
   return (

@@ -12,28 +12,27 @@ const userSchema = new mongoose.Schema(
     email: { type: String, required: true, unique: true, lowercase: true, trim: true },
     phone: {
       type: String,
-      required() {
-        return this.role === 'user'
-      },
+      required: true,
       unique: true,
       sparse: true,
       trim: true,
     },
     address: {
       type: String,
-      required() {
-        return this.role === 'user'
-      },
+      required: true,
       trim: true,
       maxlength: 300,
       default: '',
     },
+    passwordHash: { type: String, select: false },
     addresses: [addressSchema],
     profilePhoto: { type: String, default: '' },
     wishlist: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Product' }],
     emailVerified: { type: Boolean, default: false },
     phoneVerified: { type: Boolean, default: false },
     lastLoginAt: Date,
+    lastLogoutAt: Date,
+    loginStatus: { type: Boolean, default: false },
   },
   { timestamps: true },
 )

@@ -33,6 +33,7 @@ export default function CartProvider({ children }) {
 
   async function persist(nextItems) {
     setItems(nextItems)
+    if (nextItems.some((item) => item.product.localCatalog)) return
     try {
       const data = await api('/cart', {
         method: 'PUT',
@@ -63,7 +64,7 @@ export default function CartProvider({ children }) {
 
   const totals = useMemo(() => {
     const subtotal = items.reduce((sum, item) => sum + item.product.price * item.quantity, 0)
-    const tax = Number((subtotal * 0.05).toFixed(2))
+    const tax = Math.round(subtotal * 0.05)
     const deliveryCharge = subtotal && subtotal < 499 ? 49 : 0
     return { subtotal, tax, deliveryCharge, total: subtotal + tax + deliveryCharge }
   }, [items])

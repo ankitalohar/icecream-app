@@ -1,12 +1,39 @@
 import { useState } from 'react'
-import contactImage from '../assets/p30.jpg'
+import contactImage from '../assets/o30.jpg'
+import useToast from '../context/useToast'
+import { api } from '../services/api'
+
+const initialForm = {
+  name: '',
+  email: '',
+  subject: '',
+  message: '',
+}
 
 export default function Contact() {
   const [submitted, setSubmitted] = useState(false)
+  const [sending, setSending] = useState(false)
+  const [form, setForm] = useState(initialForm)
+  const notify = useToast()
 
-  function handleSubmit(e) {
+  function updateField(event) {
+    const { name, value } = event.target
+    setForm((current) => ({ ...current, [name]: value }))
+  }
+
+  async function handleSubmit(e) {
     e.preventDefault()
-    setSubmitted(true)
+    setSending(true)
+    try {
+      await api('/contacts', { method: 'POST', body: JSON.stringify(form) })
+      setForm(initialForm)
+      setSubmitted(true)
+      notify('Message sent. We will get back to you soon.')
+    } catch (error) {
+      notify(error.message, 'error')
+    } finally {
+      setSending(false)
+    }
   }
 
   return (
@@ -32,14 +59,19 @@ export default function Contact() {
         </aside>
 
         {submitted ? (
-          <p className="contact__success">
-            Thanks for reaching out! We will get back to you soon.
-          </p>
+          <article className="contact__success" role="status">
+            <span className="contact__success-icon">✓</span>
+            <h2>Message sent</h2>
+            <p>Thanks for reaching out. We will get back to you soon.</p>
+            <button type="button" className="btn btn--outline" onClick={() => setSubmitted(false)}>
+              Send another message
+            </button>
+          </article>
         ) : (
           <form className="contact-form contact-form--realistic" onSubmit={handleSubmit}>
             <label>
               Name
-              <input type="text" name="name" required placeholder="Your name" />
+              <input type="text" name="name" required placeholder="Your name" value={form.name} onChange={updateField} />
             </label>
             <label>
               Email
@@ -48,6 +80,19 @@ export default function Contact() {
                 name="email"
                 required
                 placeholder="you@example.com"
+                value={form.email}
+                onChange={updateField}
+              />
+            </label>
+            <label className="contact-form__wide">
+              Subject
+              <input
+                type="text"
+                name="subject"
+                required
+                placeholder="What can we help with?"
+                value={form.subject}
+                onChange={updateField}
               />
             </label>
             <label className="contact-form__wide">
@@ -57,10 +102,12 @@ export default function Contact() {
                 rows={5}
                 required
                 placeholder="Tell us what is on your mind..."
+                value={form.message}
+                onChange={updateField}
               />
             </label>
-            <button type="submit" className="btn btn--primary">
-              Send message
+            <button type="submit" className="btn btn--primary" disabled={sending}>
+              {sending ? 'Sending...' : 'Send message'}
             </button>
           </form>
         )}

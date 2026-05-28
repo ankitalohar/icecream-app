@@ -1,9 +1,11 @@
 import { Link, Navigate, useParams } from 'react-router-dom'
 import IceCreamCard from '../components/IceCreamCard'
+import useCart from '../context/useCart'
 import { getCategoryMenu, menuCategories } from '../data/menuCategories'
 
 export default function MenuCategory() {
   const { category } = useParams()
+  const { add } = useCart()
   const menu = getCategoryMenu(category)
 
   if (!menu) {
@@ -24,7 +26,7 @@ export default function MenuCategory() {
 
       <section className="popular__grid">
         {menu.items.map((item) => (
-          <IceCreamCard key={item.id} item={item} />
+          <IceCreamCard key={item._id} item={item} onAdd={add} />
         ))}
       </section>
 
@@ -35,7 +37,7 @@ export default function MenuCategory() {
             .filter((entry) => entry.slug !== category)
             .map((entry) => (
               <Link key={entry.slug} to={`/menu/${entry.slug}`} className="btn btn--outline">
-                {entry.icon} {entry.title}
+                {entry.buttonLabel}
               </Link>
             ))}
         </section>

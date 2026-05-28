@@ -3,6 +3,7 @@ import cors from 'cors'
 import express from 'express'
 import authRoutes from './routes/authRoutes.js'
 import cartRoutes from './routes/cartRoutes.js'
+import contactRoutes from './routes/contactRoutes.js'
 import orderRoutes from './routes/orderRoutes.js'
 import productRoutes from './routes/productRoutes.js'
 import adminRoutes from './routes/adminRoutes.js'
@@ -17,6 +18,7 @@ app.get('/api/health', (_req, res) => res.json({ status: 'ok', message: 'Vivelle
 app.use('/api/auth', authRoutes)
 app.use('/api/products', productRoutes)
 app.use('/api/ice-creams', productRoutes)
+app.use('/api/contacts', contactRoutes)
 app.use('/api/cart', cartRoutes)
 app.use('/api/orders', orderRoutes)
 app.use('/api/admin', adminRoutes)

@@ -4,6 +4,8 @@ import { api } from '../services/api'
 import useAuth from '../context/useAuth'
 import useCart from '../context/useCart'
 import useToast from '../context/useToast'
+import formatCurrency from '../utils/currency'
+import { normalizePhoneForApi } from '../utils/phone'
 
 export default function Profile() {
   const { user, logout, updateProfile } = useAuth()
@@ -36,7 +38,7 @@ export default function Profile() {
     event.preventDefault()
     setSaving(true)
     try {
-      await updateProfile(form)
+      await updateProfile({ ...form, phone: normalizePhoneForApi(form.phone) })
       notify('Profile updated.')
     } catch (error) {
       notify(error.message, 'error')
@@ -71,7 +73,10 @@ export default function Profile() {
         </label>
         <input name="name" value={form.name} onChange={change} placeholder="Full name" required />
         <input name="email" type="email" value={form.email} onChange={change} placeholder="Email" required />
-        <input name="phone" value={form.phone} onChange={change} placeholder="Mobile number" required />
+        <label className="phone-input">
+          <span className="phone-input__code">+91</span>
+          <input name="phone" type="tel" inputMode="tel" value={form.phone} onChange={change} placeholder="Enter mobile number" autoComplete="tel" required />
+        </label>
         <textarea name="address" value={form.address} onChange={change} placeholder="Delivery address" required />
         <div id="addresses" className="address-manager">
           <strong>Saved delivery addresses</strong>
@@ -92,7 +97,7 @@ export default function Profile() {
         <h2>Saved Cart</h2>
         {!savedCart.length && <p className="muted">Your cart is empty.</p>}
         {savedCart.map((line) => (
-          <p className="saved-cart-line" key={line.product._id}>{line.product.name} x{line.quantity} <strong>Rs. {line.product.price * line.quantity}</strong></p>
+          <p className="saved-cart-line" key={line.product._id}>{line.product.name} x{line.quantity} <strong>{formatCurrency(line.product.price * line.quantity)}</strong></p>
         ))}
         <h2>Order History</h2>
         {!orders.length && <p className="muted">No orders placed yet. Your saved cart remains available on the order page.</p>}
@@ -100,7 +105,7 @@ export default function Profile() {
           <article className="history-order" key={order.orderId}>
             <div><strong>{order.orderId}</strong><span>{new Date(order.createdAt).toLocaleString()}</span></div>
             <p>{order.items.map((item) => `${item.name} x${item.quantity}`).join(', ')}</p>
-            <div><strong>Rs. {order.total}</strong><span className="status-pill">{order.status}</span></div>
+            <div><strong>{formatCurrency(order.total)}</strong><span className="status-pill">{order.status}</span></div>
             <Link to={`/track/${order.orderId}`}>Track order</Link>
           </article>
         ))}

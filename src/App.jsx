@@ -8,6 +8,7 @@ import MenuCategory from './pages/MenuCategory'
 import About from './pages/About'
 import Contact from './pages/Contact'
 import Order from './pages/Order'
+import Cart from './pages/Cart'
 import ProtectedRoute from './components/ProtectedRoute'
 import Auth from './pages/Auth'
 import Profile from './pages/Profile'
@@ -52,7 +53,9 @@ export default function App() {
               </ProtectedRoute>
             }
           />
-          <Route path="/login" element={<Auth />} />
+          <Route path="/cart" element={<ProtectedRoute><Cart /></ProtectedRoute>} />
+          <Route path="/login" element={<Auth key="login" />} />
+          <Route path="/signup" element={<Auth key="signup" />} />
           <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
           <Route path="/track/:orderId" element={<ProtectedRoute><TrackOrder /></ProtectedRoute>} />
           <Route path="/dashboard" element={<ProtectedRoute admin><AdminDashboard /></ProtectedRoute>} />

@@ -1,6 +1,7 @@
 import { randomBytes } from 'node:crypto'
 import Cart from '../models/Cart.js'
 import Order from '../models/Order.js'
+import { syncCart, syncOrder } from '../services/firestore.js'
 
 function orderNumber() {
   return `VIV-${Date.now().toString().slice(-8)}-${randomBytes(2).toString('hex').toUpperCase()}`
@@ -18,7 +19,7 @@ export async function placeOrder(req, res) {
   }))
   if (!items.length) return res.status(400).json({ error: 'No products in your cart are currently available.' })
   const subtotal = items.reduce((sum, item) => sum + item.price * item.quantity, 0)
-  const tax = Number((subtotal * 0.05).toFixed(2))
+  const tax = Math.round(subtotal * 0.05)
   const deliveryCharge = subtotal >= 499 ? 0 : 49
   const estimatedDeliveryAt = new Date(Date.now() + 40 * 60 * 1000)
   const deliveryAddress = String(req.body.deliveryAddress || req.account.address || '').trim()
@@ -38,6 +39,7 @@ export async function placeOrder(req, res) {
   })
   cart.items = []
   await cart.save()
+  await Promise.all([syncOrder(order), syncCart(cart)])
   res.status(201).json(order)
 }
 

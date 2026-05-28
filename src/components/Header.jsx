@@ -129,7 +129,7 @@ export default function Header() {
                       onClick={() => setProfileOpen((open) => !open)}
                     >
                       <span className="nav__profile-icon" aria-hidden="true"><span /></span>
-                      <span>{user.name}</span>
+                      <span>Profile</span>
                     </button>
                     {profileOpen && (
                       <section className="profile-menu glass" role="menu">
@@ -142,17 +142,19 @@ export default function Header() {
                   </li>
                   <li>
                     <NavLink
-                      to="/order?cart=open"
+                      to="/cart"
                       className="nav__cart"
                       aria-label={`Cart, ${cartCount} items`}
-                      onClick={() => {
-                        closeNavigation()
-                        window.dispatchEvent(new CustomEvent('vivelle:open-cart'))
-                      }}
+                      onClick={closeNavigation}
                     >
                       <span className="nav__cart-icon" aria-hidden="true" />
                       Cart <strong>{cartCount}</strong>
                     </NavLink>
+                  </li>
+                  <li>
+                    <button type="button" className="nav__logout" onClick={handleLogout}>
+                      Logout
+                    </button>
                   </li>
                 </>
               ) : (

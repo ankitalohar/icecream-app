@@ -3,115 +3,17 @@ import Magic from '../components/Magic'
 import CustomerFeedback from '../components/CustomerFeedback'
 import MenuBookOverlay from '../components/MenuBookOverlay'
 import Rating from '../components/Rating'
+import { popularPicks } from '../data/popularPicks'
 import video1 from '../assets/v1.mp4'
 import video2 from '../assets/v2.mp4'
 import video3 from '../assets/v3.mp4'
 import aboutVideo4 from '../assets/v4.mp4'
 import aboutVideo5 from '../assets/v5.mp4'
 import aboutVideo6 from '../assets/v6.mp4'
-import pick1 from '../assets/p1.jpg'
-import pick2 from '../assets/p2.jpg'
-import pick3 from '../assets/p3.jpg'
-import pick4 from '../assets/p4.jpg'
-import pick5 from '../assets/p5.jpg'
-import pick6 from '../assets/p6.jpg'
-import pick7 from '../assets/p7.jpg'
-import pick8 from '../assets/p8.jpg'
-import pick9 from '../assets/p9.jpg'
-import pick10 from '../assets/p10.jpg'
-import pick11 from '../assets/p11.jpg'
-import pick12 from '../assets/p12.jpg'
 import './Home.css'
 
 const videos = [video1, video2, video3]
 const aboutVideos = [aboutVideo4, aboutVideo5, aboutVideo6]
-
-const popularPicks = [
-  {
-    name: 'Vanilla Bean Dream',
-    description: 'Silky vanilla bean ice cream with a clean custard finish.',
-    image: pick1,
-    detail: 'Real vanilla bean',
-    rating: 4.9,
-  },
-  {
-    name: 'Berry Blossom',
-    description: 'Bright strawberry and blueberry swirls with a tangy finish.',
-    image: pick2,
-    detail: 'Fresh berry ripple',
-    rating: 4.8,
-  },
-  {
-    name: 'Cocoa Crunch',
-    description: 'Rich chocolate ice cream loaded with crunchy hazelnut pieces.',
-    image: pick3,
-    detail: 'Roasted hazelnut',
-    rating: 4.8,
-  },
-  {
-    name: 'Mango Sorbet',
-    description: 'Tropical mango sorbet that tastes like summer in every bite.',
-    image: pick4,
-    detail: 'Ripe mango pulp',
-    rating: 4.7,
-  },
-  {
-    name: 'Salted Caramel Swirl',
-    description: 'Creamy caramel ice cream with a pinch of sea salt and sweet ribbons.',
-    image: pick5,
-    detail: 'Sea-salt caramel',
-    rating: 4.9,
-  },
-  {
-    name: 'Mint Choco Chill',
-    description: 'Cool mint ice cream with crisp chocolate chips in every bite.',
-    image: pick6,
-    detail: 'Dark choco chips',
-    rating: 4.7,
-  },
-  {
-    name: 'Cookies & Cream',
-    description: 'Vanilla cream packed with crunchy chocolate cookie pieces.',
-    image: pick7,
-    detail: 'Cookie crumble',
-    rating: 4.9,
-  },
-  {
-    name: 'Pistachio Paradise',
-    description: 'Nutty pistachio ice cream with roasted pistachio pieces and a silky finish.',
-    image: pick8,
-    detail: 'Toasted pistachio',
-    rating: 4.8,
-  },
-  {
-    name: 'Strawberry Velvet',
-    description: 'Fresh strawberry ice cream with a velvety texture and bright berry notes.',
-    image: pick9,
-    detail: 'Hand-cut berries',
-    rating: 4.8,
-  },
-  {
-    name: 'Coconut Cream Kiss',
-    description: 'Smooth coconut ice cream with toasted coconut flakes for extra crunch.',
-    image: pick10,
-    detail: 'Toasted coconut',
-    rating: 4.7,
-  },
-  {
-    name: 'Salted Caramel Swirl',
-    description: 'Creamy caramel swirled with ribbons of sea salt and crunchy caramel shards.',
-    image: pick11,
-    detail: 'Caramel shards',
-    rating: 4.9,
-  },
-  {
-    name: 'Lavender Berry Dream',
-    description: 'Floral lavender ice cream with sweet berry compote and a delicate finish.',
-    image: pick12,
-    detail: 'Berry compote',
-    rating: 4.8,
-  },
-]
 
 export default function Home() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
@@ -265,19 +167,22 @@ export default function Home() {
       <section className="popular-picks-section" id="popular">
         <h2>Popular Picks</h2>
         <div className="popular-picks-grid">
-          {popularPicks.map((item, index) => (
-            <article key={index} className="popular-card">
-              <div className="popular-image">
-                <img src={item.image} alt={item.name} loading="lazy" decoding="async" />
-                <span className="popular-detail">{item.detail}</span>
-              </div>
-              <div className="popular-copy">
-                <h3>{item.name}</h3>
-                <Rating value={item.rating} />
-                <p>{item.description}</p>
-              </div>
-            </article>
-          ))}
+          {popularPicks.map((item) => {
+            console.log(item.name, item.image)
+            return (
+              <article key={item._id} className="popular-card">
+                <div className="popular-image">
+                  <img src={item.image} alt={item.name} loading="lazy" decoding="async" />
+                  <span className="popular-detail">{item.tag}</span>
+                </div>
+                <div className="popular-copy">
+                  <h3>{item.name}</h3>
+                  <Rating value={item.rating} />
+                  <p>{item.description}</p>
+                </div>
+              </article>
+            )
+          })}
         </div>
       </section>
 
